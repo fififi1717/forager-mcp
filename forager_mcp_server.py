@@ -22,6 +22,7 @@ from typing import Optional
 
 import requests
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 FORAGER_API_KEY = os.environ.get("FORAGER_API_KEY", "")
 FORAGER_ACCOUNT_ID = os.environ.get("FORAGER_ACCOUNT_ID", "1203")
@@ -123,5 +124,10 @@ if __name__ == "__main__":
     # host="0.0.0.0" obligatoire pour que Render détecte le port ouvert
     mcp.settings.host = "0.0.0.0"
     mcp.settings.port = port
+    # Désactive la protection "DNS rebinding" (qui n'autorise que localhost par défaut) :
+    # sans ça, Render/Claude.ai se font rejeter avec une erreur 421/400.
+    mcp.settings.transport_security = TransportSecuritySettings(
+        enable_dns_rebinding_protection=False
+    )
     # Transport HTTP streamable, requis pour un connecteur distant Claude.ai
     mcp.run(transport="streamable-http")
