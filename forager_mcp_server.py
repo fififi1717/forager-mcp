@@ -120,5 +120,8 @@ def forager_get_contacts(
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
+    # host="0.0.0.0" obligatoire pour que Render détecte le port ouvert
+    mcp.settings.host = "0.0.0.0"
+    mcp.settings.port = port
     # Transport HTTP streamable, requis pour un connecteur distant Claude.ai
     mcp.run(transport="streamable-http")
